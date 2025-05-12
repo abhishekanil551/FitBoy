@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FITBOY Admin - Coupon Management</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="admin-container">
+        <%- include('partials/sidebar', {page: 'coupon-management'}) %>
+        
+        <div class="main-content">
+            <%- include('partials/header') %>
+            
+            <div class="dashboard-content">
+                <div class="page-header">
+                    <h1 class="page-title">Coupon Management</h1>
+                    <button class="add-button">Create New Coupon</button>
+                </div>
+                
+                <div class="filter-bar">
+                    <div class="search-box">
+                        <input type="text" placeholder="Search coupons...">
+                        <button class="search-button">Search</button>
+                    </div>
+                    <div class="filter-options">
+                        <select>
+                            <option value="">All Types</option>
+                            <option value="percentage">Percentage</option>
+                            <option value="fixed">Fixed Amount</option>
+                        </select>
+                        <select>
+                            <option value="">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="expired">Expired</option>
+                            <option value="scheduled">Scheduled</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="data-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Code</th>
+                                <th>Type</th>
+                                <th>Value</th>
+                                <th>Min Purchase</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Usage</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#CPN-001</td>
+                                <td>SUMMER25</td>
+                                <td>Percentage</td>
+                                <td>25%</td>
+                                <td>$50.00</td>
+                                <td>Apr 1, 2025</td>
+                                <td>Jun 30, 2025</td>
+                                <td>45/100</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td class="actions">
+                                    <button class="action-button edit">Edit</button>
+                                    <button class="action-button delete">Delete</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#CPN-002</td>
+                                <td>WELCOME10</td>
+                                <td>Fixed Amount</td>
+                                <td>$10.00</td>
+                                <td>$75.00</td>
+                                <td>Jan 1, 2025</td>
+                                <td>Dec 31, 2025</td>
+                                <td>128/500</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td class="actions">
+                                    <button class="action-button edit">Edit</button>
+                                    <button class="action-button delete">Delete</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#CPN-003</td>
+                                <td>FLASH50</td>
+                                <td>Percentage</td>
+                                <td>50%</td>
+                                <td>$100.00</td>
+                                <td>Mar 15, 2025</td>
+                                <td>Mar 17, 2025</td>
+                                <td>75/100</td>
+                                <td><span class="status-badge status-inactive">Expired</span></td>
+                                <td class="actions">
+                                    <button class="action-button edit">Edit</button>
+                                    <button class="action-button delete">Delete</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#CPN-004</td>
+                                <td>HOLIDAY20</td>
+                                <td>Percentage</td>
+                                <td>20%</td>
+                                <td>$0.00</td>
+                                <td>Dec 1, 2025</td>
+                                <td>Dec 31, 2025</td>
+                                <td>0/200</td>
+                                <td><span class="status-badge status-processing">Scheduled</span></td>
+                                <td class="actions">
+                                    <button class="action-button edit">Edit</button>
+                                    <button class="action-button delete">Delete</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#CPN-005</td>
+                                <td>FREESHIP</td>
+                                <td>Fixed Amount</td>
+                                <td>$15.00</td>
+                                <td>$150.00</td>
+                                <td>Apr 10, 2025</td>
+                                <td>May 10, 2025</td>
+                                <td>12/100</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td class="actions">
+                                    <button class="action-button edit">Edit</button>
+                                    <button class="action-button delete">Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <%- include('partials/pagination', {currentPage: 1, totalPages: 3}) %>
+            </div>
+            
+            <%- include('partials/footer') %>
+        </div>
+    </div>
+    
+    <script src="/js/script.js"></script>
+</body>
+</html>

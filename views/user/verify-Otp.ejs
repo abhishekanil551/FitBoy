@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OTP Verification</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background-color: #000;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .otp-container {
+      background-color: #111;
+      border-radius: 20px;
+      padding: 40px 30px;
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+    }
+
+    .otp-container h2 {
+      margin-bottom: 20px;
+      letter-spacing: 2px;
+      font-weight: 500;
+    }
+
+    #timerValue {
+      font-size: 14px;
+      color: #aaa;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    #timerValue.expired {
+      color: red;
+    }
+
+    label {
+      display: block;
+      text-align: left;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 14px 20px;
+      border: 2px solid #fff;
+      border-radius: 40px;
+      background-color: #000;
+      color: #fff;
+      font-size: 16px;
+      margin-bottom: 20px;
+      outline: none;
+    }
+
+    .verify-btn {
+      width: 100%;
+      padding: 12px;
+      background-color: #fff;
+      color: #000;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: 0.3s;
+    }
+
+    .verify-btn:hover {
+      background-color: #ccc;
+    }
+
+    .resend {
+      display: block;
+      margin-top: 20px;
+      font-size: 14px;
+      letter-spacing: 1px;
+      text-decoration: underline;
+      cursor: pointer;
+      color: #00f;
+    }
+
+    .resend.disabled {
+      pointer-events: none;
+      color: gray;
+    }
+  </style>
+</head>
+<body>
+  <div class="otp-container">
+    <h2>ENTER YOUR OTP HERE</h2>
+    <span id="timerValue">Resend in 60s</span>
+    <form action="/verify-Otp" method="post" onsubmit="return validateOtpForm()">
+      <label for="otp">OTP :</label>
+      <input type="text" id="otp" name="otp" maxlength="6" placeholder="Enter 6-digit OTP" />
+      <button type="submit" class="verify-btn">VERIFY</button>
+      <span class="resend disabled" id="resendOtpBtn">RESEND OTP</span>
+    </form>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <script>
+    let timer = 60;
+    let timerInterval;
+
+    function startTimer() {
+      timer = 60;
+      $('#timerValue').text(`Resend in ${timer}s`).removeClass("expired");
+      $('#otp').prop("disabled", false);
+      $('#resendOtpBtn').addClass("disabled");
+
+      timerInterval = setInterval(() => {
+        timer--;
+        $('#timerValue').text(`Resend in ${timer}s`);
+
+        if (timer <= 0) {
+          clearInterval(timerInterval);
+          $('#timerValue').text("OTP Expired").addClass("expired");
+          $('#otp').prop("disabled", true);
+          $('#resendOtpBtn').removeClass("disabled");
+        }
+      }, 1000);
+    }
+
+    function validateOtpForm() {
+      const otpInput = $('#otp').val();
+
+      $.ajax({
+        type: 'POST',
+        url: '/verify-Otp',
+        data: { otp: otpInput },
+        success: function (response) {
+          if (response.success) {
+            Swal.fire({
+              icon: 'success',
+              title: 'OTP verification successful',
+              showConfirmButton: false,
+              timer: 1500,
+            }).then(() => {
+              window.location.href = response.redirectUrl;
+            });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: response.message,
+            });
+          }
+        },
+        error: function () {
+          Swal.fire({
+            icon: 'error',
+            title: 'Invalid OTP',
+            text: 'Try again',
+          });
+        },
+      });
+      return false;
+    }
+
+    $('#resendOtpBtn').click(function () {
+      if ($(this).hasClass("disabled")) return;
+
+      $.ajax({
+        type: 'POST',
+        url: '/resend-Otp',
+        success: function (response) {
+          if (response.success) {
+            Swal.fire({
+              icon: 'success',
+              title: 'OTP Resent',
+              text: 'Check your email/phone again.',
+              timer: 1500,
+              showConfirmButton: false
+            });
+            $('#otp').val('');
+            startTimer();
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Failed to resend',
+              text: response.message,
+            });
+          }
+        },
+        error: function () {
+          Swal.fire({
+            icon: 'error',
+            title: 'Server Error',
+            text: 'Could not resend OTP',
+          });
+        }
+      });
+    });
+
+    // Start initial timer
+    startTimer();
+  </script>
+</body>
+</html>

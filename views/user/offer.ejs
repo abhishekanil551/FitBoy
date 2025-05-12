@@ -1,0 +1,71 @@
+<%- include('partials/header') %>
+
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans">
+
+  <!-- 🎉 Banner -->
+  <div class="w-full bg-gradient-to-r from-yellow-400 via-green-400 to-yellow-400 text-white text-center py-6 shadow-lg">
+    <h1 class="text-3xl font-bold">🌼 Vishu Specials Are Here!</h1>
+    <p class="text-lg mt-1">Celebrate Vishu with epic discounts on your favorite games!</p>
+  </div>
+
+  <!-- ⏳ Countdown Timer -->
+  <div class="flex justify-center my-6">
+    <div class="bg-white rounded-xl shadow p-4 text-center">
+      <h2 class="text-xl font-semibold mb-2 text-yellow-600">Offer ends in:</h2>
+      <div id="timer" class="text-3xl font-bold text-green-600"></div>
+    </div>
+  </div>
+
+  <!-- 🛒 Coupon Code -->
+  <div class="max-w-xl mx-auto bg-yellow-100 rounded-lg shadow p-4 text-center mb-6">
+    <p class="text-lg font-medium">Use Coupon:</p>
+    <div class="text-2xl font-bold text-green-700 tracking-widest">VISHU2025</div>
+    <p class="text-sm mt-1 text-gray-600">Get 25% off on orders above ₹500</p>
+  </div>
+
+  <!-- 🎮 Products Section -->
+  <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-12">
+    <!-- Product Card -->
+    <div class="bg-white rounded-lg shadow-md p-4 hover:shadow-xl transition">
+      <img src="https://via.placeholder.com/300x200" class="rounded-md mb-3" alt="Game"/>
+      <h3 class="font-semibold text-lg">Call of Battle 4</h3>
+      <p class="text-gray-500 text-sm">Multiplayer FPS</p>
+      <div class="mt-2">
+        <span class="text-red-600 font-bold">₹499</span>
+        <span class="line-through text-gray-400 ml-2">₹899</span>
+      </div>
+      <button class="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Buy Now</button>
+    </div>
+
+    <!-- Add more product cards as needed -->
+  </div>
+
+  <script>
+    // Simple Countdown Timer
+    const timerElement = document.getElementById("timer");
+    const endDate = new Date("2025-04-15T23:59:59");
+
+    function updateTimer() {
+      const now = new Date();
+      const diff = endDate - now;
+
+      if (diff <= 0) {
+        timerElement.textContent = "Offer Ended";
+        return;
+      }
+
+      const hours = String(Math.floor(diff / (1000 * 60 * 60)) % 74).padStart(2, '0');
+      const minutes = String(Math.floor(diff / (1000 * 60)) % 60).padStart(2, '0');
+      const seconds = String(Math.floor(diff / 1000) % 60).padStart(2, '0');
+
+      timerElement.textContent = `${hours}:${minutes}:${seconds}`;
+    }
+
+    setInterval(updateTimer, 1000);
+    updateTimer();
+  </script>
+
+</body>
+<%- include('partials/footer') %>

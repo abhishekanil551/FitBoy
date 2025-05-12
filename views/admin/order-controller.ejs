@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FITBOY Admin - Order Controller</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="admin-container">
+        <%- include('partials/sidebar', {page: 'order-controller'}) %>
+        
+        <div class="main-content">
+            <%- include('partials/header') %>
+            
+            <div class="dashboard-content">
+                <div class="page-header">
+                    <h1 class="page-title">Order Controller</h1>
+                </div>
+                
+                <div class="filter-bar">
+                    <div class="search-box">
+                        <input type="text" placeholder="Search orders...">
+                        <button class="search-button">Search</button>
+                    </div>
+                    <div class="filter-options">
+                        <select>
+                            <option value="">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="processing">Processing</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                        <div class="date-filter">
+                            <input type="date" placeholder="From Date">
+                            <input type="date" placeholder="To Date">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="data-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Date</th>
+                                <th>Products</th>
+                                <th>Total</th>
+                                <th>Payment</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#ORD-5523</td>
+                                <td>John Smith</td>
+                                <td>Apr 18, 2025</td>
+                                <td>2 items</td>
+                                <td>$120.50</td>
+                                <td>Credit Card</td>
+                                <td><span class="status-badge status-completed">Completed</span></td>
+                                <td class="actions">
+                                    <button class="action-button view">View</button>
+                                    <button class="action-button edit">Edit</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#ORD-5522</td>
+                                <td>Sarah Johnson</td>
+                                <td>Apr 18, 2025</td>
+                                <td>1 item</td>
+                                <td>$75.00</td>
+                                <td>PayPal</td>
+                                <td><span class="status-badge status-processing">Processing</span></td>
+                                <td class="actions">
+                                    <button class="action-button view">View</button>
+                                    <button class="action-button edit">Edit</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#ORD-5521</td>
+                                <td>Michael Brown</td>
+                                <td>Apr 17, 2025</td>
+                                <td>3 items</td>
+                                <td>$249.99</td>
+                                <td>Credit Card</td>
+                                <td><span class="status-badge status-completed">Completed</span></td>
+                                <td class="actions">
+                                    <button class="action-button view">View</button>
+                                    <button class="action-button edit">Edit</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#ORD-5520</td>
+                                <td>Emily Davis</td>
+                                <td>Apr 17, 2025</td>
+                                <td>1 item</td>
+                                <td>$89.95</td>
+                                <td>Credit Card</td>
+                                <td><span class="status-badge status-pending">Pending</span></td>
+                                <td class="actions">
+                                    <button class="action-button view">View</button>
+                                    <button class="action-button edit">Edit</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#ORD-5519</td>
+                                <td>Robert Wilson</td>
+                                <td>Apr 16, 2025</td>
+                                <td>2 items</td>
+                                <td>$145.90</td>
+                                <td>PayPal</td>
+                                <td><span class="status-badge status-cancelled">Cancelled</span></td>
+                                <td class="actions">
+                                    <button class="action-button view">View</button>
+                                    <button class="action-button edit">Edit</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <%- include('partials/pagination', {currentPage: 1, totalPages: 8}) %>
+            </div>
+            
+            <%- include('partials/footer') %>
+        </div>
+    </div>
+    
+    <script src="/js/script.js"></script>
+</body>
+</html>

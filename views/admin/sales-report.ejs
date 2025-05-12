@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FITBOY Admin - Sales Report</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="admin-container">
+        <%- include('partials/sidebar', {page: 'sales-report'}) %>
+        
+        <div class="main-content">
+            <%- include('partials/header') %>
+            
+            <div class="dashboard-content">
+                <div class="page-header">
+                    <h1 class="page-title">Sales Report</h1>
+                    <div class="report-actions">
+                        <button class="action-button">Export CSV</button>
+                        <button class="action-button">Print Report</button>
+                    </div>
+                </div>
+                
+                <div class="filter-bar">
+                    <div class="date-filter">
+                        <input type="date" placeholder="From Date">
+                        <input type="date" placeholder="To Date">
+                        <button class="search-button">Apply Filter</button>
+                    </div>
+                    <div class="filter-options">
+                        <select>
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly" selected>Monthly</option>
+                            <option value="yearly">Yearly</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-icon sales-icon"></div>
+                        <div class="stat-info">
+                            <div class="stat-value">$24,500</div>
+                            <div class="stat-label">Total Sales</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon orders-icon"></div>
+                        <div class="stat-info">
+                            <div class="stat-value">156</div>
+                            <div class="stat-label">Orders</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon products-icon"></div>
+                        <div class="stat-info">
+                            <div class="stat-value">$157.05</div>
+                            <div class="stat-label">Average Order</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h2>Sales Overview</h2>
+                    </div>
+                    <div class="card-content">
+                        <div class="chart-container" style="height: 300px; background-color: #f9f9f9; display: flex; justify-content: center; align-items: center;">
+                            <p>Sales Chart Placeholder</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-row">
+                    <div class="dashboard-col">
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <h2>Top Selling Products</h2>
+                            </div>
+                            <div class="card-content">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Product</th>
+                                            <th>Units Sold</th>
+                                            <th>Revenue</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Premium Fitness Tracker</td>
+                                            <td>142</td>
+                                            <td>$12,778.58</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Workout Resistance Bands</td>
+                                            <td>98</td>
+                                            <td>$2,445.10</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Adjustable Dumbbell Set</td>
+                                            <td>76</td>
+                                            <td>$15,199.24</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Yoga Mat Premium</td>
+                                            <td>65</td>
+                                            <td>$2,925.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Running Shoes Pro</td>
+                                            <td>54</td>
+                                            <td>$7,017.30</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-col">
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <h2>Sales by Category</h2>
+                            </div>
+                            <div class="card-content">
+                                <div class="chart-container" style="height: 200px; background-color: #f9f9f9; display: flex; justify-content: center; align-items: center;">
+                                    <p>Category Chart Placeholder</p>
+                                </div>
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Category</th>
+                                            <th>Revenue</th>
+                                            <th>%</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Fitness Trackers</td>
+                                            <td>$13,245.00</td>
+                                            <td>32%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Weights</td>
+                                            <td>$15,890.50</td>
+                                            <td>38%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Yoga Equipment</td>
+                                            <td>$5,670.25</td>
+                                            <td>14%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Fitness Apparel</td>
+                                            <td>$6,780.00</td>
+                                            <td>16%</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <%- include('partials/footer') %>
+        </div>
+    </div>
+    
+    <script src="/js/script.js"></script>
+</body>
+</html>

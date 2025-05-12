@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FITBOY Admin - Product Management</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+    <div class="admin-container">
+        <%- include('partials/sidebar', {page: 'product-management'}) %>
+
+        <div class="main-content">
+            <%- include('partials/header') %>
+
+            <div class="dashboard-content">
+                <div class="page-header">
+                    <h1 class="page-title">Product Management</h1>
+                    <a href="/admin/addproduct" class="add-button">Add New Product</a>
+                    <!-- <button id="add-offer-btn"  class="add-button">Add Offer to Products</button> -->
+
+                </div>
+
+                <!-- Filter and search section -->
+                <div class="filter-bar">
+                    <div class="search-box">
+                        <form id="search-form" action="/admin/product-management" method="GET">
+                            <input type="text" name="search" placeholder="Search products..." value="<%= search || '' %>" />
+                            <button type="submit" class="search-button">Search</button>
+                        </form>
+                    </div>
+                    <div class="filter-options">
+                        <form id="filter-form" action="/admin/product-management" method="GET">
+                            <select name="category" onchange="this.form.submit()">
+                                <option value="">Select Category</option>
+                                <% category.forEach(cat => { %>
+                                    <option value="<%= cat._id %>" <%= selectedCategory && selectedCategory.toString() === cat._id.toString() ? 'selected' : '' %>>
+                                        <%= cat.name %>
+                                    </option>
+                                <% }); %>
+                            </select>
+                            <select name="company" onchange="this.form.submit()">
+                                <option value="">Select Company</option>
+                                <% for(let i=0; i<company.length; i++) { %>
+                                    <option value="<%= company[i]._id %>" <%= selectedCompany && selectedCompany.toString() === company[i]._id.toString() ? 'selected' : '' %>>
+                                        <%= company[i].companyName %>
+                                    </option>
+                                <% } %>
+                            </select>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Products table -->
+                <div class="data-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Poster</th>
+                                <th>Game Name</th>
+                                <!-- <th>Description</th> -->
+                                <!-- <th>Trailer</th> -->
+                                <th>Category</th>
+                                <th>Company</th>
+                                <th>Regular Price</th>
+                                <th>Sales Price</th>
+                                <th>Recommended</th>
+                                <th>Free</th>
+                                <!-- <th>offer</th> -->
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (products && products.length > 0) { %>
+                                <% products.forEach(product => { %>
+                                <tr>
+                                    <td>
+                                        <div class="product-thumbnail">
+                                            <img class="product-poster" src="<%= product.poster %>" alt="<%= product.name %>" />
+                                        </div>
+                                    </td>
+                                    <td><%= product.name %></td>
+                                    <!-- <td>
+                                        <div class="description-cell">
+                                            <%= product.description %>
+                                        </div>
+                                    </td> -->
+                                    <!-- <td><%= product.trailer %></td> -->
+                                    <td>
+                                        <% if (product.categoryId && product.categoryId.length > 0) { %>
+                                            <% product.categoryId.forEach((cat, index) => { %>
+                                                <%= cat.name %><%= index < product.categoryId.length - 1 ? ', ' : '' %>
+                                            <% }); %>
+                                        <% } else { %>
+                                            N/A
+                                        <% } %>
+                                    </td>
+                                    <td><%= product.company ? product.company.companyName : 'N/A' %></td>                           
+                                    <td>₹<%= product.regularPrice %></td>
+                                    <td>₹<%= product.salesPrice %></td>
+
+                                    <td>
+                                        <a href="/admin/toggle-recommended?id=<%= product._id %>" class="action-btn" >
+                                          <%= product.isRecommended ? 'Unmark' : 'Mark' %>
+                                        </a>
+                                      </td>
+
+                                      <td>
+                                        <% if (!product.isFree) { %>
+                                          <a href="/admin/free-product?id=<%= product._id %>" class="action-btnn">Free</a>
+                                        <% } else { %>
+                                          <a href="/admin/free-product?id=<%= product._id %>" class="action-btn">paid</a>
+                                        <% } %>
+                                      </td>
+                                      
+                                      
+                                    <!-- <td>
+                                        <% if (product.offer) { %>
+                                          <span><%= product.offer.title %> - <%= product.offer.discountPercentage %>% OFF</span>
+                                        <% } else { %>
+                                          <span>No offer</span>
+                                        <% } %>
+                                    </td> -->
+                                    <td>
+                                        <span class="status-badge <%= product.isListed ? 'status-active' : 'status-inactive' %>">
+                                            <%= product.isListed ? 'Active' : 'Inactive' %>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="/admin/editproductpage?id=<%= product._id %>" class="action-btn">Edit</a>
+                                        <a href="/admin/list-products?id=<%= product._id %>" 
+                                            class="action-btn <%= product.isListed ? 'unlist' : 'list' %>">
+                                            <%= product.isListed ? 'Unlist' : 'List' %>
+                                         </a>
+                                    </td>
+                                </tr>
+                                <% }); %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="10" style="text-align: center;">No products found.</td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                    <%- include('partials/pagination', {currentPage: 1, totalPages: 10}) %>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // List/Unlist product functionality
+            document.querySelectorAll('.action-button.list, .action-button.unlist').forEach(button => {
+                button.addEventListener('click', function() {
+                    const productId = this.dataset.id;
+                    const action = this.classList.contains('list') ? 'list' : 'unlist';
+                    
+                    fetch(`/admin/${action}-product?id=${productId}`)
+                        .then(response => response.json())
+                        .then(result => {
+                            if (result.success) {
+                                showAlert('success', `Product ${action === 'list' ? 'listed' : 'unlisted'} successfully!`);
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 1500);
+                            } else {
+                                throw new Error(result.message || `Failed to ${action} product`);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            showAlert('error', error.message || `Failed to ${action} product`);
+                        });
+                });
+            });
+            
+            function showAlert(type, message) {
+                const alert = document.createElement('div');
+                alert.className = `alert alert-${type}`;
+                alert.textContent = message;
+                alert.style.position = 'fixed';
+                alert.style.top = '20px';
+                alert.style.right = '20px';
+                alert.style.padding = '15px';
+                alert.style.borderRadius = '4px';
+                alert.style.color = 'white';
+                alert.style.backgroundColor = type === 'success' ? '#4CAF50' : '#f44336';
+                alert.style.zIndex = '10000';
+                alert.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+                
+                document.body.appendChild(alert);
+                
+                setTimeout(() => {
+                    alert.style.opacity = '0';
+                    alert.style.transition = 'opacity 0.3s ease';
+                    setTimeout(() => {
+                        alert.remove();
+                    }, 300);
+                }, 3000);
+            }
+        });
+    </script>
+                <%- include('partials/footer') %>
+
+</body>
+</html>

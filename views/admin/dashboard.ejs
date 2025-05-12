@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FITBOY Admin - Dashboard</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="admin-container">
+        <%- include('partials/sidebar', {page: 'dashboard'}) %>
+        
+        <div class="main-content">
+            <%- include('partials/header') %>
+            
+            <div class="dashboard-content">
+                <h1 class="page-title">Dashboard</h1>
+                
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-icon sales-icon"></div>
+                        <div class="stat-info">
+                            <div class="stat-value">$24,500</div>
+                            <div class="stat-label">Total Sales</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon orders-icon"></div>
+                        <div class="stat-info">
+                            <div class="stat-value">156</div>
+                            <div class="stat-label">New Orders</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon customers-icon"></div>
+                        <div class="stat-info">
+                            <div class="stat-value"><%= userCount %></div>
+                            <div class="stat-label">Customers</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon products-icon"><img src="" alt="Games"></div>
+                        <div class="stat-info">
+                            <div class="stat-value"><%= productsCount %></div>
+                            <div class="stat-label">Total Games</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-row">
+                    <div class="dashboard-col">
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <h2>Recent Orders</h2>
+                                <a href="/admin/order-controller" class="view-all">View All</a>
+                            </div>
+                            <div class="card-content">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Order ID</th>
+                                            <th>Customer</th>
+                                            <th>Date</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>#ORD-5523</td>
+                                            <td>John Smith</td>
+                                            <td>Apr 18, 2025</td>
+                                            <td>$120.50</td>
+                                            <td><span class="status-badge status-completed">Completed</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>#ORD-5522</td>
+                                            <td>Sarah Johnson</td>
+                                            <td>Apr 18, 2025</td>
+                                            <td>$75.00</td>
+                                            <td><span class="status-badge status-processing">Processing</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>#ORD-5521</td>
+                                            <td>Michael Brown</td>
+                                            <td>Apr 17, 2025</td>
+                                            <td>$249.99</td>
+                                            <td><span class="status-badge status-completed">Completed</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>#ORD-5520</td>
+                                            <td>Emily Davis</td>
+                                            <td>Apr 17, 2025</td>
+                                            <td>$89.95</td>
+                                            <td><span class="status-badge status-pending">Pending</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-col">
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <h2>Top Selling Products</h2>
+                                <a href="/admin/product-management" class="view-all">View All</a>
+                            </div>
+                            <div class="card-content">
+                                <div class="product-list">
+                                    <div class="product-item">
+                                        <div class="product-image"></div>
+                                        <div class="product-info">
+                                            <div class="product-name">Premium Fitness Tracker</div>
+                                            <div class="product-sales">142 sales</div>
+                                        </div>
+                                        <div class="product-price">$89.99</div>
+                                    </div>
+                                    <div class="product-item">
+                                        <div class="product-image"></div>
+                                        <div class="product-info">
+                                            <div class="product-name">Workout Resistance Bands</div>
+                                            <div class="product-sales">98 sales</div>
+                                        </div>
+                                        <div class="product-price">$24.95</div>
+                                    </div>
+                                    <div class="product-item">
+                                        <div class="product-image"></div>
+                                        <div class="product-info">
+                                            <div class="product-name">Adjustable Dumbbell Set</div>
+                                            <div class="product-sales">76 sales</div>
+                                        </div>
+                                        <div class="product-price">$199.99</div>
+                                    </div>
+                                    <div class="product-item">
+                                        <div class="product-image"></div>
+                                        <div class="product-info">
+                                            <div class="product-name">Yoga Mat Premium</div>
+                                            <div class="product-sales">65 sales</div>
+                                        </div>
+                                        <div class="product-price">$45.00</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="/js/script.js"></script>
+</body>
+</html>
+<%- include('partials/footer') %>

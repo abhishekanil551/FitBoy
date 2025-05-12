@@ -1,0 +1,83 @@
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
+
+const userSchema = new Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  googleId: {
+    type: String,
+    unique: true,
+    sparse: true // ✅ allows multiple null values
+  },
+  password: {
+    type: String,
+    required: false
+  },
+  isBlocked: {
+    type: Boolean,
+    default: false
+  },
+  isAdmin: {
+    type: Boolean,
+    default: false
+  },
+  cart: {
+    type: [Schema.Types.ObjectId], // Change here to an array of ObjectIds
+    ref: 'Product',
+    default: [] // Initialize as an empty array
+  },
+  wallet: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Wallet'
+  }],
+  library: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Library'
+  }],
+  createdOn: {
+    type: Date,
+    default: Date.now
+  },
+  referalCode: {
+    type: String
+  },
+  address: {
+    street: String,
+    city: String,
+    state: String,
+    postalCode: String,  // more universal than "zip"
+    country: String
+  },
+  wishlist: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Product'
+    }
+  ],
+  searchHistory: [{
+    category: {
+      type: Schema.Types.ObjectId,
+      ref: 'Category'
+    },
+    company: {
+      type: String
+    },
+    searchOn: {
+      type: Date,
+      default: Date.now
+    }
+  }]
+});
+
+
+
+
+User=mongoose.model('User',userSchema)
+module.exports=User;
