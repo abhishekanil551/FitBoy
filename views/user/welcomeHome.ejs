@@ -16,6 +16,111 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
     <style>
+      /* ==================== LOADING SCREEN STYLES ==================== */
+      .loading-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #000000;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+      }
+
+      .loading-screen.hidden {
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      .loading-logo {
+        margin-bottom: 30px;
+        position: relative;
+        text-align: center;
+      }
+
+      .loading-logo .logo {
+        font-size: 3rem;
+        font-weight: 900;
+        color: #dd0000;
+        text-shadow: 
+            0 0 2px #ff0000, 
+            0 0 4px rgba(255, 0, 0, 0.7),
+            -1px -1px 0 #990000,
+            1px -1px 0 #990000,
+            -1px 1px 0 #990000,
+            1px 1px 0 #990000,
+            2px 2px 3px rgba(0, 0, 0, 0.5);
+        letter-spacing: 0.12em;
+        transform: scaleY(1.2);
+        font-family: 'Arial Black', Impact, sans-serif;
+        -webkit-text-stroke: 0.5px #990000;
+        animation: pulse-logo 2s infinite;
+      }
+
+      .loading-logo .star {
+        color: #cc0000;
+        font-size: 1.5rem;
+        position: absolute;
+        top: -1.5rem;
+        left: 50%;
+        transform: translateX(-50%);
+        text-shadow: 0 0 3px rgba(255, 0, 0, 0.8);
+        animation: star-pulse 1.5s infinite;
+      }
+
+      .loading-progress {
+        width: 200px;
+        height: 4px;
+        background-color: #333333;
+        border-radius: 2px;
+        overflow: hidden;
+        margin-bottom: 20px;
+        position: relative;
+      }
+
+      .loading-progress-bar {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, #990000, #ff0000);
+        border-radius: 2px;
+        transition: width 0.3s ease;
+      }
+
+      .loading-text {
+        color: #ffffff;
+        font-size: 1rem;
+        letter-spacing: 2px;
+        margin-top: 10px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      .loading-particles-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: -1;
+      }
+
+      @keyframes pulse-logo {
+        0% { text-shadow: 0 0 2px #ff0000, 0 0 4px rgba(255, 0, 0, 0.7); }
+        50% { text-shadow: 0 0 10px #ff0000, 0 0 15px rgba(255, 0, 0, 0.9); }
+        100% { text-shadow: 0 0 2px #ff0000, 0 0 4px rgba(255, 0, 0, 0.7); }
+      }
+
+      @keyframes star-pulse {
+        0% { opacity: 0.5; transform: translateX(-50%) scale(0.8); }
+        50% { opacity: 1; transform: translateX(-50%) scale(1.2); }
+        100% { opacity: 0.5; transform: translateX(-50%) scale(0.8); }
+      }
+
       /* ==================== GENERAL STYLES ==================== */
       
       :root {
@@ -28,14 +133,13 @@
       }
       
       body {
-        background-image: url('https://media-hosting.imagekit.io/dee6c214e7554d0e/logobanner.jpeg?Expires=1841370638&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=jPkJiT4oPggsWiZ2uq6VpV280InK~9y8sbPhJkcl8iZaRhICXCCaIBYbcXY~Cwke5FN88KN1Btv4LcOtaE8r3u0-nN4M3M5V94TlZtEWUTKr8HBvdc~6wEcqj6GFTcDn0Jf4Zry9QMr2tNDzW0FkXvuLXwFaYTM~9itEnMV0MefnzvdD9os4Pl3K08Ilx5UjYf~21YkcRKe-Ah54ALeRr0gl4o1VINQz6HSLfEWKGlIiLtUWJ7p7V1-iz6OFYtMoBrDH~FhMZPbm0WLjrtqpDBknOiBMnQcHzt-j0UzJz6kNhEpQJ-VsPtj4GKtFF1I4BJTrkKA7UbuiUi7NYWTSfQ__');
+        background: black;
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center;
         background-attachment: fixed;
         min-height: 100vh;
         margin: 0;
-        padding: 56px 20px 0;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         color: white;
         overflow-x: hidden; /* Prevent horizontal scroll during animations */
@@ -43,6 +147,65 @@
       
       .navbar {
         background-color: transparent !important;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+      }
+
+      /* ==================== VIDEO HERO SECTION ==================== */
+      .video-hero-section {
+        position: relative;
+        height: 100vh;
+        width: 100%;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: -56px; /* Offset for navbar */
+      }
+
+      .video-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 1;
+      }
+
+      .video-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 2;
+      }
+
+      .video-content {
+        position: relative;
+        z-index: 3;
+        text-align: center;
+        color: white;
+        padding: 20px;
+        max-width: 800px;
+      }
+
+      .video-content h1 {
+        font-weight: 700;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        font-size: 3.5rem;
+      }
+      
+      .video-content p {
+        margin-bottom: 2rem;
+        font-size: 1.2rem;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
       }
 
       /* ==================== GAME CARD STYLES ==================== */
@@ -568,65 +731,6 @@
         margin-top: 20px;
       }
 
-      /* ==================== HERO SECTION ==================== */
-      .hero-section {
-        height: 90vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        color: white;
-        padding: 20px;
-        position: relative;
-        overflow: hidden;
-      }
-      
-      .hero-overlay {
-        background: rgba(19, 16, 16, 0.6);
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 2rem;
-        position: relative;
-        z-index: 2;
-      }
-      
-      .hero-section h1 {
-        font-weight: 700;
-        margin-bottom: 1rem;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-      }
-      
-      .hero-section p {
-        margin-bottom: 2rem;
-        font-size: 1.2rem;
-        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-      }
-      
-      /* Parallax effect for hero section */
-      .hero-parallax {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 1;
-      }
-      
-      .hero-parallax-layer {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-size: cover;
-        background-position: center;
-        opacity: 0.3;
-      }
-      
       /* Explore button animation */
       .explorebtn {
         text-decoration: none;
@@ -745,7 +849,7 @@
       }
 
       .footer-column a {
-        color: #ffffff;
+        color: #a09999;
         text-decoration: none;
         margin-bottom: 10px;
         transition: color 0.2s;
@@ -753,7 +857,7 @@
       }
 
       .footer-column a:hover {
-        color: #a79595;
+        color: #000;
         text-decoration: underline;
       }
 
@@ -788,6 +892,10 @@
           text-align: center;
           width: 100%;
         }
+        
+        .video-content h1 {
+          font-size: 2.5rem;
+        }
       }
 
       @media (max-width: 768px) {
@@ -796,8 +904,12 @@
           gap: 30px;
         }
         
-        .hero-section h1 {
+        .video-content h1 {
           font-size: 2rem;
+        }
+        
+        .video-content p {
+          font-size: 1rem;
         }
       }
 
@@ -815,6 +927,10 @@
           width: 40px;
           height: 50px;
           font-size: 1rem;
+        }
+        
+        .video-content h1 {
+          font-size: 1.8rem;
         }
       }
 
@@ -900,11 +1016,24 @@
     </style>
   </head>
   <body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loading-screen">
+      <div class="loading-particles-container" id="loading-particles-container"></div>
+      <div class="loading-logo">
+        <div class="star">★</div>
+        <div class="logo">FITBOY</div>
+      </div>
+      <div class="loading-progress">
+        <div class="loading-progress-bar" id="loading-progress-bar"></div>
+      </div>
+      <div class="loading-text" id="loading-text">Loading...</div>
+    </div>
+
     <!-- Particles container for background effects -->
     <div class="particles-container" id="particles-container"></div>
 
     <!-- ==================== NAVBAR ==================== -->
-    <nav class="navbar navbar-expand-lg bg-black fixed-top">
+    <nav class="navbar navbar-expand-lg bg-black">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">
           <div class="fitboy-logo">
@@ -941,15 +1070,14 @@
       </div>
     </nav>
 
-    <!-- ==================== HERO SECTION ==================== -->
-    <section class="hero-section">
-      <!-- Parallax background layers -->
-      <div class="hero-parallax" id="hero-parallax">
-        <div class="hero-parallax-layer hero-parallax-layer-1"></div>
-        <div class="hero-parallax-layer hero-parallax-layer-2"></div>
-      </div>
-      
-      <div class="hero-overlay">
+    <!-- ==================== VIDEO HERO SECTION ==================== -->
+    <section class="video-hero-section">
+      <video class="video-background" id="hero-video" muted>
+        <source src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/vada-sYcGN4Dw4fwXdzkHDOPJaZprzrT3eT.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+      <div class="video-overlay"></div>
+      <div class="video-content">
         <h1 class="display-4 fw-bold" id="hero-title">Welcome to FITBOY!</h1>
         <p class="lead" id="hero-subtitle">Discover new and exciting games tailored just for you.</p>
         <a href="#free-games" class="explorebtn" id="exploreGamesBtn">Explore Games</a>
@@ -1045,6 +1173,7 @@
           </div>
         </div>
       </section>
+    </div>
 
     <!-- ==================== FOOTER ==================== -->
     <footer class="confany-footer">
@@ -1269,22 +1398,19 @@
     <script src="/js/forgotPassword.js"></script>
 
     <script>
-      // Register GSAP ScrollTrigger
-      gsap.registerPlugin(ScrollTrigger);
-
-      // ==================== ENHANCED ANIMATIONS ====================
-
-      // Create background particles
-      function createParticles() {
-        const container = document.getElementById('particles-container');
-        const particleCount = 50;
+      // ==================== LOADING SCREEN SCRIPTS ====================
+      
+      // Create particles for loading screen
+      function createLoadingParticles() {
+        const container = document.getElementById('loading-particles-container');
+        const particleCount = 100;
         
         for (let i = 0; i < particleCount; i++) {
           const particle = document.createElement('div');
           particle.classList.add('particle');
           
-          // Random size between 2px and 5px
-          const size = Math.random() * 3 + 2;
+          // Random size between 2px and 6px
+          const size = Math.random() * 4 + 2;
           particle.style.width = `${size}px`;
           particle.style.height = `${size}px`;
           
@@ -1295,151 +1421,255 @@
           particle.style.top = `${posY}px`;
           
           // Random opacity
-          particle.style.opacity = Math.random() * 0.5 + 0.1;
+          particle.style.opacity = Math.random() * 0.7 + 0.3;
           
           container.appendChild(particle);
           
           // Animate particle
           gsap.to(particle, {
-            y: `+=${Math.random() * 200 + 100}`,
-            x: `+=${Math.random() * 50 - 25}`,
+            y: `+=${Math.random() * 300 - 150}`,
+            x: `+=${Math.random() * 300 - 150}`,
             opacity: 0,
-            duration: Math.random() * 10 + 10,
-            ease: "none",
+            duration: Math.random() * 3 + 2,
+            ease: "power1.inOut",
             repeat: -1,
-            delay: Math.random() * 10,
-            onComplete: function() {
-              // Reset position when animation completes
-              particle.style.top = `${Math.random() * window.innerHeight}px`;
-              particle.style.left = `${Math.random() * window.innerWidth}px`;
-              particle.style.opacity = Math.random() * 0.5 + 0.1;
-            }
+            yoyo: true
           });
         }
       }
       
-      // Initialize particles
-      createParticles();
-
-      // Logo animations
-      gsap.to("#logo-star", {
-        rotation: 360,
-        duration: 10,
-        repeat: -1,
-        ease: "none"
-      });
-      
-      document.getElementById('main-logo').classList.add('animated');
-      document.getElementById('logo-star').classList.add('animated');
-
-      // Navbar Animation: Fade in and slide down
-      gsap.from(".navbar", {
-        y: -50,
-        opacity: 0,
-        duration: 1,
-        ease: "power2.out"
-      });
-
-      // Hero Section Animation: Staggered entrance for title, description, and button
-      gsap.from(".hero-section h1", {
-        y: 50,
-        opacity: 0,
-        duration: 1,
-        delay: 0.5,
-        ease: "power3.out"
-      });
-
-      gsap.from(".hero-section p", {
-        y: 50,
-        opacity: 0,
-        duration: 1,
-        delay: 0.7,
-        ease: "power3.out"
-      });
-
-      gsap.from(".hero-section .explorebtn", {
-        y: 50,
-        opacity: 0,
-        duration: 1,
-        delay: 0.9,
-        ease: "power3.out",
-        onComplete: function() {
-          document.getElementById('exploreGamesBtn').classList.add('animated');
-        }
-      });
-      
-      // Parallax effect for hero section
-      document.addEventListener('mousemove', function(e) {
-        const parallaxLayers = document.querySelectorAll('.hero-parallax-layer');
-        const mouseX = e.clientX / window.innerWidth;
-        const mouseY = e.clientY / window.innerHeight;
+      // Simulate loading progress
+      function simulateLoading() {
+        const progressBar = document.getElementById('loading-progress-bar');
+        const loadingText = document.getElementById('loading-text');
+        const loadingScreen = document.getElementById('loading-screen');
         
-        parallaxLayers.forEach((layer, index) => {
-          const depth = (index + 1) * 10;
-          const moveX = mouseX * depth;
-          const moveY = mouseY * depth;
+        let progress = 0;
+        const loadingTexts = [
+          "Loading assets...",
+          "Preparing game data...",
+          "Setting up environment...",
+          "Almost ready...",
+          "Welcome to FITBOY!"
+        ];
+        
+        const interval = setInterval(() => {
+          progress += Math.random() * 10;
           
-          gsap.to(layer, {
-            x: moveX,
-            y: moveY,
-            duration: 1,
-            ease: "power2.out"
+          if (progress >= 100) {
+            progress = 100;
+            clearInterval(interval);
+            
+            // Show final text
+            loadingText.textContent = loadingTexts[4];
+            
+            // Hide loading screen after a short delay
+            setTimeout(() => {
+              loadingScreen.classList.add('hidden');
+              
+              // Remove loading screen from DOM after transition completes
+              setTimeout(() => {
+                loadingScreen.remove();
+                // Initialize main site animations after loading screen is gone
+                initializeMainSiteAnimations();
+                // Play the hero video
+                playHeroVideo();
+              }, 500);
+            }, 500);
+          }
+          
+          // Update progress bar
+          progressBar.style.width = `${progress}%`;
+          
+          // Update loading text based on progress
+          if (progress < 25) {
+            loadingText.textContent = loadingTexts[0];
+          } else if (progress < 50) {
+            loadingText.textContent = loadingTexts[1];
+          } else if (progress < 75) {
+            loadingText.textContent = loadingTexts[2];
+          } else if (progress < 100) {
+            loadingText.textContent = loadingTexts[3];
+          }
+        }, 200);
+      }
+      
+      // Play hero video
+      function playHeroVideo() {
+        const video = document.getElementById('hero-video');
+        if (video) {
+          video.play();
+          
+          // Add animation to hero content after video starts
+          video.addEventListener('playing', () => {
+            animateHeroContent();
           });
+          
+          // Make sure video only plays once
+          video.addEventListener('ended', () => {
+            // Video has ended, no need to loop
+            video.removeAttribute('src');
+            video.load();
+          });
+        }
+      }
+      
+      // Animate hero content
+      function animateHeroContent() {
+        gsap.from("#hero-title", {
+          y: 50,
+          opacity: 0,
+          duration: 1,
+          delay: 0.5,
+          ease: "power3.out"
         });
-      });
 
-      // Section Titles Animation: Animate underline on scroll
-      document.querySelectorAll('.section-title').forEach(title => {
-        ScrollTrigger.create({
-          trigger: title,
-          start: "top 80%",
-          onEnter: () => title.classList.add('animated'),
-          onLeaveBack: () => title.classList.remove('animated')
+        gsap.from("#hero-subtitle", {
+          y: 50,
+          opacity: 0,
+          duration: 1,
+          delay: 0.7,
+          ease: "power3.out"
         });
-      });
 
-      // Game Cards Animation: Enhanced reveal on scroll
-      document.querySelectorAll('.game-card.reveal').forEach((card, index) => {
-        ScrollTrigger.create({
-          trigger: card,
-          start: "top 85%",
-          onEnter: () => {
-            gsap.to(card, {
-              opacity: 1,
-              y: 0,
-              duration: 0.8,
-              delay: index * 0.1,
-              ease: "power2.out",
+        gsap.from("#exploreGamesBtn", {
+          y: 50,
+          opacity: 0,
+          duration: 1,
+          delay: 0.9,
+          ease: "power3.out",
+          onComplete: function() {
+            document.getElementById('exploreGamesBtn').classList.add('animated');
+          }
+        });
+      }
+      
+      // Initialize loading screen
+      document.addEventListener('DOMContentLoaded', function() {
+        // Create particles for loading screen
+        createLoadingParticles();
+        
+        // Preload the video
+        const video = document.getElementById('hero-video');
+        if (video) {
+          video.load();
+        }
+        
+        // Simulate loading progress
+        simulateLoading();
+      });
+      
+      // Initialize main site animations after loading screen is gone
+      function initializeMainSiteAnimations() {
+        // Register GSAP ScrollTrigger
+        gsap.registerPlugin(ScrollTrigger);
+
+        // ==================== ENHANCED ANIMATIONS ====================
+
+        // Create background particles
+        function createParticles() {
+          const container = document.getElementById('particles-container');
+          const particleCount = 50;
+          
+          for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            
+            // Random size between 2px and 5px
+            const size = Math.random() * 3 + 2;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            
+            // Random position
+            const posX = Math.random() * window.innerWidth;
+            const posY = Math.random() * window.innerHeight;
+            particle.style.left = `${posX}px`;
+            particle.style.top = `${posY}px`;
+            
+            // Random opacity
+            particle.style.opacity = Math.random() * 0.5 + 0.1;
+            
+            container.appendChild(particle);
+            
+            // Animate particle
+            gsap.to(particle, {
+              y: `+=${Math.random() * 200 + 100}`,
+              x: `+=${Math.random() * 50 - 25}`,
+              opacity: 0,
+              duration: Math.random() * 10 + 10,
+              ease: "none",
+              repeat: -1,
+              delay: Math.random() * 10,
               onComplete: function() {
-                // Add floating animation to every other card
-                if (index % 2 === 0) {
-                  card.classList.add('animated');
-                }
+                // Reset position when animation completes
+                particle.style.top = `${Math.random() * window.innerHeight}px`;
+                particle.style.left = `${Math.random() * window.innerWidth}px`;
+                particle.style.opacity = Math.random() * 0.5 + 0.1;
               }
             });
           }
-        });
-      });
-
-      // Footer Animation: Fade in columns and logo
-      gsap.from(".footer-brand", {
-        opacity: 0,
-        y: 50,
-        duration: 1,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: ".confany-footer",
-          start: "top 80%",
-          toggleActions: "play none none none"
         }
-      });
+        
+        // Initialize particles
+        createParticles();
 
-      gsap.utils.toArray(".footer-column").forEach((column, index) => {
-        gsap.from(column, {
+        // Logo animations
+        gsap.to("#logo-star", {
+          rotation: 360,
+          duration: 10,
+          repeat: -1,
+          ease: "none"
+        });
+        
+        document.getElementById('main-logo').classList.add('animated');
+        document.getElementById('logo-star').classList.add('animated');
+
+        // Navbar Animation: Fade in and slide down
+        gsap.from(".navbar", {
+          y: -50,
+          opacity: 0,
+          duration: 1,
+          ease: "power2.out"
+        });
+
+        // Section Titles Animation: Animate underline on scroll
+        document.querySelectorAll('.section-title').forEach(title => {
+          ScrollTrigger.create({
+            trigger: title,
+            start: "top 80%",
+            onEnter: () => title.classList.add('animated'),
+            onLeaveBack: () => title.classList.remove('animated')
+          });
+        });
+
+        // Game Cards Animation: Enhanced reveal on scroll
+        document.querySelectorAll('.game-card.reveal').forEach((card, index) => {
+          ScrollTrigger.create({
+            trigger: card,
+            start: "top 85%",
+            onEnter: () => {
+              gsap.to(card, {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                delay: index * 0.1,
+                ease: "power2.out",
+                onComplete: function() {
+                  // Add floating animation to every other card
+                  if (index % 2 === 0) {
+                    card.classList.add('animated');
+                  }
+                }
+              });
+            }
+          });
+        });
+
+        // Footer Animation: Fade in columns and logo
+        gsap.from(".footer-brand", {
           opacity: 0,
           y: 50,
           duration: 1,
-          delay: index * 0.2,
           ease: "power2.out",
           scrollTrigger: {
             trigger: ".confany-footer",
@@ -1447,136 +1677,151 @@
             toggleActions: "play none none none"
           }
         });
-      });
 
-      // Modal Animation: Scale and fade in
-      document.querySelectorAll('.auth-modal').forEach(modal => {
-        modal.addEventListener('show.bs.modal', function() {
-          gsap.from(modal.querySelector('.modal-content'), {
-            scale: 0.8,
+        gsap.utils.toArray(".footer-column").forEach((column, index) => {
+          gsap.from(column, {
             opacity: 0,
-            duration: 0.5,
-            ease: "back.out(1.7)"
+            y: 50,
+            duration: 1,
+            delay: index * 0.2,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: ".confany-footer",
+              start: "top 80%",
+              toggleActions: "play none none none"
+            }
           });
         });
-      });
 
-      // Button Hover Animation
-      document.querySelectorAll('.auth-btn, .explorebtn, .verify-btn, .resend').forEach(btn => {
-        btn.addEventListener('mouseenter', () => {
-          gsap.to(btn, {
-            scale: 1.05,
-            duration: 0.3,
-            ease: "power2.out"
+        // Modal Animation: Scale and fade in
+        document.querySelectorAll('.auth-modal').forEach(modal => {
+          modal.addEventListener('show.bs.modal', function() {
+            gsap.from(modal.querySelector('.modal-content'), {
+              scale: 0.8,
+              opacity: 0,
+              duration: 0.5,
+              ease: "back.out(1.7)"
+            });
           });
         });
-        btn.addEventListener('mouseleave', () => {
-          gsap.to(btn, {
-            scale: 1,
-            duration: 0.3,
-            ease: "power2.out"
+
+        // Button Hover Animation
+        document.querySelectorAll('.auth-btn, .explorebtn, .verify-btn, .resend').forEach(btn => {
+          btn.addEventListener('mouseenter', () => {
+            gsap.to(btn, {
+              scale: 1.05,
+              duration: 0.3,
+              ease: "power2.out"
+            });
           });
-        });
-      });
-      
-      // Enhanced game card hover effects
-      document.querySelectorAll('.game-card').forEach(card => {
-        card.addEventListener('mouseenter', function() {
-          // Create a subtle tilt effect
-          const rect = card.getBoundingClientRect();
-          const mouseX = event.clientX - rect.left;
-          const mouseY = event.clientY - rect.top;
-          const centerX = rect.width / 2;
-          const centerY = rect.height / 2;
-          
-          const tiltX = (mouseY - centerY) / 20;
-          const tiltY = (centerX - mouseX) / 20;
-          
-          gsap.to(card, {
-            rotationX: tiltX,
-            rotationY: tiltY,
-            duration: 0.5,
-            ease: "power2.out"
-          });
-          
-          // Zoom in the image
-          gsap.to(card.querySelector('img'), {
-            scale: 1.05,
-            duration: 0.5,
-            ease: "power2.out"
-          });
-          
-          // Brighten the card body
-          gsap.to(card.querySelector('.card-body'), {
-            backgroundColor: '#9a8e7a',
-            duration: 0.3
-          });
-          
-          // Lift the title
-          gsap.to(card.querySelector('.card-title'), {
-            y: -2,
-            color: '#ffffff',
-            duration: 0.3
-          });
-          
-          // Change price color
-          gsap.to(card.querySelector('.price'), {
-            color: '#ffffff',
-            duration: 0.3
+          btn.addEventListener('mouseleave', () => {
+            gsap.to(btn, {
+              scale: 1,
+              duration: 0.3,
+              ease: "power2.out"
+            });
           });
         });
         
-        card.addEventListener('mouseleave', function() {
-          // Reset all animations
-          gsap.to(card, {
-            rotationX: 0,
-            rotationY: 0,
-            duration: 0.5,
-            ease: "power2.out"
+        // Enhanced game card hover effects
+        document.querySelectorAll('.game-card').forEach(card => {
+          card.addEventListener('mouseenter', function(event) {
+            // Create a subtle tilt effect
+            const rect = card.getBoundingClientRect();
+            const mouseX = event.clientX - rect.left;
+            const mouseY = event.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const tiltX = (mouseY - centerY) / 20;
+            const tiltY = (centerX - mouseX) / 20;
+            
+            gsap.to(card, {
+              rotationX: tiltX,
+              rotationY: tiltY,
+              duration: 0.5,
+              ease: "power2.out"
+            });
+            
+            // Zoom in the image
+            gsap.to(card.querySelector('img'), {
+              scale: 1.05,
+              duration: 0.5,
+              ease: "power2.out"
+            });
+            
+            // Brighten the card body
+            gsap.to(card.querySelector('.card-body'), {
+              backgroundColor: '#9a8e7a',
+              duration: 0.3
+            });
+            
+            // Lift the title
+            gsap.to(card.querySelector('.card-title'), {
+              y: -2,
+              color: '#ffffff',
+              duration: 0.3
+            });
+            
+            // Change price color
+            gsap.to(card.querySelector('.price'), {
+              color: '#ffffff',
+              duration: 0.3
+            });
           });
           
-          gsap.to(card.querySelector('img'), {
-            scale: 1,
-            duration: 0.5,
-            ease: "power2.out"
+          card.addEventListener('mouseleave', function() {
+            // Reset all animations
+            gsap.to(card, {
+              rotationX: 0,
+              rotationY: 0,
+              duration: 0.5,
+              ease: "power2.out"
+            });
+            
+            gsap.to(card.querySelector('img'), {
+              scale: 1,
+              duration: 0.5,
+              ease: "power2.out"
+            });
+            
+            gsap.to(card.querySelector('.card-body'), {
+              backgroundColor: '#8d816f',
+              duration: 0.3
+            });
+            
+            gsap.to(card.querySelector('.card-title'), {
+              y: 0,
+              color: '#000000',
+              duration: 0.3
+            });
+            
+            gsap.to(card.querySelector('.price'), {
+              color: '#686550',
+              duration: 0.3
+            });
           });
           
-          gsap.to(card.querySelector('.card-body'), {
-            backgroundColor: '#8d816f',
-            duration: 0.3
-          });
-          
-          gsap.to(card.querySelector('.card-title'), {
-            y: 0,
-            color: '#000000',
-            duration: 0.3
-          });
-          
-          gsap.to(card.querySelector('.price'), {
-            color: '#686550',
-            duration: 0.3
+          // Add 3D perspective to cards
+          card.addEventListener('mousemove', function(e) {
+            const rect = card.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const tiltX = (mouseY - centerY) / 20;
+            const tiltY = (centerX - mouseX) / 20;
+            
+            gsap.to(card, {
+              rotationX: tiltX,
+              rotationY: tiltY,
+              duration: 0.2,
+              ease: "power2.out"
+            });
           });
         });
-        
-        // Add 3D perspective to cards
-        card.addEventListener('mousemove', function(e) {
-          const rect = card.getBoundingClientRect();
-          const mouseX = e.clientX - rect.left;
-          const mouseY = e.clientY - rect.top;
-          const centerX = rect.width / 2;
-          const centerY = rect.height / 2;
-          
-          const tiltX = (mouseY - centerY) / 20;
-          const tiltY = (centerX - mouseX) / 20;
-          
-          gsap.to(card, {
-            rotationX: tiltX,
-            rotationY: tiltY,
-            duration: 0.2,
-            ease: "power2.out"
-          });
-        });
-      });
+      }
 
       // ==================== NAVIGATION SCRIPTS ====================
       
@@ -1732,7 +1977,7 @@
           let isValid = true;
 
           if (!name) {
-            nameError.textContent = "Full Name is required";
+            nameError.textContent = "Name is required";
             isValid = false;
           } else if (!/^[A-Za-z\s]+$/.test(name)) {
             nameError.textContent = "Name can only contain alphabets and spaces";
@@ -2068,111 +2313,3 @@
     </script>
   </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

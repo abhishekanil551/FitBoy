@@ -466,6 +466,17 @@ textarea:focus {
     color: var(--dark-color);
 }
 
+.settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.settings-form {
+    margin-top: 20px;
+}
+
 .account-actions {
     display: flex;
     gap: 15px;
@@ -549,6 +560,26 @@ footer {
         height: 20px;
     }
 
+/* Toggle button styles */
+.toggle-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    color: var(--primary-color);
+    font-weight: 600;
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.toggle-btn svg {
+    transition: transform 0.3s ease;
+}
+
+.toggle-btn.active svg {
+    transform: rotate(180deg);
+}
 
 /* Responsive Styles */
 @media (max-width: 768px) {
@@ -627,31 +658,12 @@ footer {
                         <img id="profileImage" src="https://via.placeholder.com/150" alt="Profile Image">
                     </div>
                     <div class="profile-info">
-                        <h2 id="userName">John Doe</h2>
-                        <p id="userEmail">john.doe@example.com</p>
+                        <h2 id="userName"><%=user.name%></h2>
+                        <p id="userEmail"><%=user.email%></p>
                         <button id="editProfileBtn" class="btn primary-btn">Edit Profile</button>
                     </div>
                 </div>
                 
-                <div class="profile-details">
-                    <h3>Account Details</h3>
-                    <div class="detail-row">
-                        <span class="label">Name:</span>
-                        <span id="fullName" class="value">John Doe</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="label">Email:</span>
-                        <span id="email" class="value">john.doe@example.com</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="label">Member Since:</span>
-                        <span id="createdOn" class="value">January 1, 2023</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="label">Referral Code:</span>
-                        <span id="referralCode" class="value">JOHN123</span>
-                    </div>
-                </div>
                 
                 <div class="profile-address">
                     <h3>Default Address</h3>
@@ -694,12 +706,12 @@ footer {
                         </div>
                         
                         <div class="form-group">
-                            <label for="name">Full Name</label>
+                            <label for="name" style="color: #212529;">Full Name</label>
                             <input type="text" id="name" name="name" required>
                         </div>
                         
                         <div class="form-group">
-                            <label for="editEmail">Email Address</label>
+                            <label for="editEmail" style="color: #212529;">Email Address</label>
                             <input type="email" id="editEmail" name="email" required>
                             <p class="help-text">Changing your email will require verification.</p>
                         </div>
@@ -807,9 +819,19 @@ footer {
             
             <!-- Settings Section -->
             <section id="settings-section" class="settings-section section-hidden">
+                <!-- Change Password Card -->
                 <div class="settings-card">
-                    <h3>Change Password</h3>
-                    <form id="changePasswordForm">
+                    <div class="settings-header">
+                        <h3>Change Password</h3>
+                        <button type="button" class="toggle-btn" id="togglePasswordForm">
+                            <span>Show</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <form id="changePasswordForm" class="settings-form hidden">
                         <div class="form-group">
                             <label for="currentPassword">Current Password</label>
                             <input type="password" id="currentPassword" name="currentPassword" required>
@@ -828,6 +850,52 @@ footer {
                         
                         <div class="form-actions">
                             <button type="submit" class="btn primary-btn">Update Password</button>
+                            <button type="button" class="btn secondary-btn cancel-form-btn">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Change Email Card -->
+                <div class="settings-card">
+                    <div class="settings-header">
+                        <h3>Change Email</h3>
+                        <button type="button" class="toggle-btn" id="toggleEmailForm">
+                            <span>Show</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <form id="changeEmailForm" class="settings-form hidden">
+                        <div class="form-group">
+                            <label for="currentEmail">Current Email</label>
+                            <input type="email" id="currentEmail" name="currentEmail" readonly>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="newEmail">New Email</label>
+                            <input type="email" id="newEmail" name="newEmail" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="emailPassword">Password</label>
+                            <input type="password" id="emailPassword" name="emailPassword" required>
+                            <p class="help-text">Enter your password to confirm this change.</p>
+                        </div>
+                        
+                        <div id="emailCodeVerificationSection" class="form-group hidden">
+                            <label for="emailVerificationCode">Verification Code</label>
+                            <div class="verification-input">
+                                <input type="text" id="emailVerificationCode" name="emailVerificationCode" placeholder="Enter the code sent to your new email">
+                                <button type="button" id="verifyEmailCodeBtn" class="btn secondary-btn">Verify</button>
+                            </div>
+                            <p class="help-text">A verification code has been sent to your new email address.</p>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" id="requestEmailChangeBtn" class="btn primary-btn">Request Change</button>
+                            <button type="button" class="btn secondary-btn cancel-form-btn">Cancel</button>
                         </div>
                     </form>
                 </div>
@@ -835,7 +903,7 @@ footer {
                 <div class="settings-card">
                     <h3>Account Actions</h3>
                     <div class="account-actions">
-                        <button id="logoutBtn" class="btn secondary-btn">Logout</button>
+                        <a href="/logout"><button id="logoutBtn" class="btn secondary-btn">Logout</button></a>
                         <button id="deleteAccountBtn" class="btn danger-btn">Delete Account</button>
                     </div>
                 </div>
@@ -966,10 +1034,67 @@ function setupEventListeners() {
         filterOrders(this.value);
     });
     
-    // Settings section
+    // Settings section - Toggle forms
+    document.getElementById('togglePasswordForm').addEventListener('click', function() {
+        toggleSettingsForm('changePasswordForm', this);
+    });
+    
+    document.getElementById('toggleEmailForm').addEventListener('click', function() {
+        toggleSettingsForm('changeEmailForm', this);
+    });
+    
+    // Cancel form buttons
+    document.querySelectorAll('.cancel-form-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            // Find the parent form
+            const form = this.closest('form');
+            const toggleBtn = document.querySelector(`.toggle-btn[id="toggle${form.id.charAt(0).toUpperCase() + form.id.slice(1)}"]`);
+            
+            // Hide the form
+            form.classList.add('hidden');
+            
+            // Update toggle button
+            toggleBtn.classList.remove('active');
+            toggleBtn.querySelector('span').textContent = 'Show';
+            
+            // Reset the form
+            form.reset();
+            
+            // Hide verification section if visible
+            const verificationSection = form.querySelector('[id$="VerificationSection"]');
+            if (verificationSection) {
+                verificationSection.classList.add('hidden');
+            }
+            
+            // Show request button if hidden
+            const requestBtn = form.querySelector('[id$="ChangeBtn"]');
+            if (requestBtn) {
+                requestBtn.style.display = 'inline-block';
+            }
+            
+            // Enable form fields
+            const inputs = form.querySelectorAll('input:not([readonly])');
+            inputs.forEach(input => {
+                input.removeAttribute('readonly');
+            });
+        });
+    });
+    
+    // Settings section - Form submissions
     document.getElementById('changePasswordForm').addEventListener('submit', function(event) {
         event.preventDefault();
         changePassword();
+    });
+    
+    // Change Email form submission
+    document.getElementById('changeEmailForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        requestEmailChange();
+    });
+    
+    // Email verification button
+    document.getElementById('verifyEmailCodeBtn').addEventListener('click', function() {
+        verifyEmailCode();
     });
     
     document.getElementById('logoutBtn').addEventListener('click', function() {
@@ -979,6 +1104,35 @@ function setupEventListeners() {
     document.getElementById('deleteAccountBtn').addEventListener('click', function() {
         deleteAccount();
     });
+}
+
+function toggleSettingsForm(formId, toggleBtn) {
+    const form = document.getElementById(formId);
+    
+    // Toggle form visibility
+    form.classList.toggle('hidden');
+    
+    // Update toggle button
+    toggleBtn.classList.toggle('active');
+    
+    // Update button text
+    const buttonText = toggleBtn.querySelector('span');
+    buttonText.textContent = form.classList.contains('hidden') ? 'Show' : 'Hide';
+    
+    // If showing this form, hide other forms
+    if (!form.classList.contains('hidden')) {
+        const otherForms = document.querySelectorAll('.settings-form:not(#' + formId + ')');
+        otherForms.forEach(otherForm => {
+            otherForm.classList.add('hidden');
+            
+            // Update other toggle buttons
+            const otherToggleBtn = document.querySelector(`.toggle-btn[id="toggle${otherForm.id.charAt(0).toUpperCase() + otherForm.id.slice(1)}"]`);
+            if (otherToggleBtn) {
+                otherToggleBtn.classList.remove('active');
+                otherToggleBtn.querySelector('span').textContent = 'Show';
+            }
+        });
+    }
 }
 
 function showSection(sectionId) {
@@ -1004,38 +1158,6 @@ function showSection(sectionId) {
     // Update URL hash
     window.location.hash = sectionId;
 }
-
-// User Profile Functions
-function fetchUserData() {
-    // In a real application, this would be an API call to your backend
-    // For this example, we'll use mock data
-    
-    // Simulate API call delay
-    setTimeout(() => {
-        const userData = {
-            id: '123456',
-            name: 'John Doe',
-            email: 'john.doe@example.com',
-            createdOn: '2023-01-15T10:30:00Z',
-            referalCode: 'JOHNDOE123',
-            address: {
-                street: '123 Main Street',
-                city: 'New York',
-                state: 'NY',
-                postalCode: '10001',
-                country: 'United States'
-            },
-            profileImage: 'https://via.placeholder.com/150'
-        };
-        
-        // Update the UI with user data
-        updateUserProfile(userData);
-        
-        // Populate edit profile form
-        populateEditProfileForm(userData);
-    }, 500);
-}
-
 function updateUserProfile(userData) {
     // Update profile image
     document.getElementById('profileImage').src = userData.profileImage;
@@ -1043,18 +1165,6 @@ function updateUserProfile(userData) {
     // Update user info
     document.getElementById('userName').textContent = userData.name;
     document.getElementById('userEmail').textContent = userData.email;
-    document.getElementById('fullName').textContent = userData.name;
-    document.getElementById('email').textContent = userData.email;
-    
-    // Format and display created date
-    const createdDate = new Date(userData.createdOn);
-    document.getElementById('createdOn').textContent = createdDate.toLocaleDateString('en-US', { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
-    });
-    
-    document.getElementById('referralCode').textContent = userData.referalCode;
     
     // Update address
     if (userData.address) {
@@ -1134,9 +1244,10 @@ function saveProfileChanges(userData) {
         // Update profile data
         document.getElementById('userName').textContent = userData.name;
         document.getElementById('userEmail').textContent = userData.email;
-        document.getElementById('fullName').textContent = userData.name;
-        document.getElementById('email').textContent = userData.email;
         document.getElementById('profileImage').src = userData.profileImage;
+        
+        // Update current email in the change email form
+        document.getElementById('currentEmail').value = userData.email;
         
         // Hide verification section if visible
         document.getElementById('emailVerificationSection').classList.add('hidden');
@@ -1783,6 +1894,101 @@ function changePassword() {
     setTimeout(() => {
         alert('Password changed successfully!');
         document.getElementById('changePasswordForm').reset();
+        
+        // Hide the form after successful change
+        const form = document.getElementById('changePasswordForm');
+        form.classList.add('hidden');
+        
+        // Update toggle button
+        const toggleBtn = document.getElementById('togglePasswordForm');
+        toggleBtn.classList.remove('active');
+        toggleBtn.querySelector('span').textContent = 'Show';
+    }, 1000);
+}
+
+// New function for email change
+function requestEmailChange() {
+    const currentEmail = document.getElementById('currentEmail').value;
+    const newEmail = document.getElementById('newEmail').value;
+    const password = document.getElementById('emailPassword').value;
+    
+    // Validate inputs
+    if (!newEmail || !password) {
+        alert('Please fill in all required fields');
+        return;
+    }
+    
+    if (newEmail === currentEmail) {
+        alert('New email must be different from your current email');
+        return;
+    }
+    
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(newEmail)) {
+        alert('Please enter a valid email address');
+        return;
+    }
+    
+    // In a real application, you would verify the password and send a verification code
+    // For this example, we'll simulate sending a verification code
+    
+    // Show verification section
+    document.getElementById('emailCodeVerificationSection').classList.remove('hidden');
+    
+    // Hide the request button
+    document.getElementById('requestEmailChangeBtn').style.display = 'none';
+    
+    // Disable form fields
+    document.getElementById('newEmail').setAttribute('readonly', 'true');
+    document.getElementById('emailPassword').setAttribute('readonly', 'true');
+    
+    // Simulate sending verification code
+    alert('A verification code has been sent to ' + newEmail);
+}
+
+// New function to verify email code
+function verifyEmailCode() {
+    const code = document.getElementById('emailVerificationCode').value;
+    const newEmail = document.getElementById('newEmail').value;
+    
+    // In a real application, you would verify the code with your backend
+    // For this example, we'll accept any code
+    if (!code) {
+        alert('Please enter the verification code');
+        return;
+    }
+    
+    // Simulate API call delay
+    setTimeout(() => {
+        // Update email in profile
+        document.getElementById('userEmail').textContent = newEmail;
+        document.getElementById('currentEmail').value = newEmail;
+        
+        // Reset form
+        document.getElementById('changeEmailForm').reset();
+        document.getElementById('currentEmail').value = newEmail;
+        
+        // Hide verification section
+        document.getElementById('emailCodeVerificationSection').classList.add('hidden');
+        
+        // Show the request button
+        document.getElementById('requestEmailChangeBtn').style.display = 'inline-block';
+        
+        // Enable form fields
+        document.getElementById('newEmail').removeAttribute('readonly');
+        document.getElementById('emailPassword').removeAttribute('readonly');
+        
+        // Hide the form after successful change
+        const form = document.getElementById('changeEmailForm');
+        form.classList.add('hidden');
+        
+        // Update toggle button
+        const toggleBtn = document.getElementById('toggleEmailForm');
+        toggleBtn.classList.remove('active');
+        toggleBtn.querySelector('span').textContent = 'Show';
+        
+        alert('Email changed successfully!');
     }, 1000);
 }
 
@@ -1812,9 +2018,6 @@ function deleteAccount() {
         }
     }
 }
-
-
-
 
 function handleBack(event) {
     event.preventDefault(); // prevent default anchor behavior
