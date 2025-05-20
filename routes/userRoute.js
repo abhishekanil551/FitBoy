@@ -47,10 +47,15 @@ route.get('/cart',userAuth,cartCtrl.cartPage)
 route.post('/cart/add/:productId',userAuth,cartCtrl.addToCart)
 route.delete('/cart/remove/:productId',userAuth,cartCtrl.removeFromCart)
 
+// support
+route.get('/support',userAuth,userCtrl.supportPage)
 
 // user settings
-route.get('/settings',userAuth,settingsCtrl.settingsPage)
-
+route.get('/settings', userAuth, settingsCtrl.settingsPage);
+route.post('/add-address', userAuth, settingsCtrl.addAddress);
+route.put('/edit-address', userAuth, settingsCtrl.editAddress);
+route.delete('/delete-address/:id', userAuth, settingsCtrl.deleteAddress);
+route.put('/address-default/:id', userAuth, settingsCtrl.setDefaultAddress);
 
 
 module.exports=route;

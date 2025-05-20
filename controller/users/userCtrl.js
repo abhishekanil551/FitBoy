@@ -101,6 +101,17 @@ const pageNotFount= async(req,res)=>{
 
 
 
+
+const supportPage=async(reqq,res)=>{
+  try {
+    res.render('Support')
+  } catch (error) {
+   res.redirect('/pageNotFount') 
+  }
+}
+
+
+
 const signUp=async (req,res)=>{
     try{
         const{name,email,password,cPassword,googleId}=req.body;
@@ -500,5 +511,6 @@ module.exports={
     logout,
     gamesPage,
     productDetails,
+    supportPage,
     
 }

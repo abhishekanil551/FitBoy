@@ -48,13 +48,16 @@ const userSchema = new Schema({
   referalCode: {
     type: String
   },
-  address: {
-    street: String,
-    city: String,
-    state: String,
-    postalCode: String,  // more universal than "zip"
-    country: String
-  },
+  addresses: [
+    {
+      street: String,
+      city: String,
+      state: String,
+      postalCode: String,
+      country: String,
+      isDefault: Boolean,
+    }
+  ],
   wishlist: [
     {
       type: Schema.Types.ObjectId,

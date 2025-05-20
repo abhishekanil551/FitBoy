@@ -157,7 +157,7 @@
       /* ==================== VIDEO HERO SECTION ==================== */
       .video-hero-section {
         position: relative;
-        height: 100vh;
+        height: 95vh;
         width: 100%;
         overflow: hidden;
         display: flex;
@@ -772,22 +772,7 @@
       }
       
       /* Button shine effect */
-      .explorebtn::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(
-          to right,
-          rgba(255, 255, 255, 0) 0%,
-          rgba(255, 255, 255, 0.3) 50%,
-          rgba(255, 255, 255, 0) 100%
-        );
-        transition: all 0.6s;
-        z-index: -1;
-      }
+     
       
       .explorebtn:hover::before {
         left: 100%;
@@ -973,6 +958,105 @@
         font-family: 'Arial Black', Impact, sans-serif;
         -webkit-text-stroke: 0.5px #990000;
       }
+         /* Scroll Down Button Styles */
+    .scroll-down-container {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+    
+    .scroll-down-container.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .scroll-down-button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    
+    .scroll-down-arrow {
+      margin-top: 8px;
+      width: 40px;
+      height: 40px;
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      border-radius: 50%;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      animation: pulse-border 2s infinite;
+    }
+    
+    .scroll-down-arrow::after {
+      content: '';
+      width: 10px;
+      height: 10px;
+      border-right: 2px solid white;
+      border-bottom: 2px solid white;
+      transform: rotate(45deg) translateY(-2px);
+    }
+    
+    @keyframes bounce-arrow {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+      }
+      40% {
+        transform: translateY(-10px);
+      }
+      60% {
+        transform: translateY(-5px);
+      }
+    }
+    
+    .scroll-down-arrow {
+      animation: bounce-arrow 2s infinite;
+    }
+    
+    /* Responsive adjustments for scroll button */
+    @media (max-width: 768px) {
+      .scroll-down-container {
+        bottom: 20px;
+      }
+      
+      .scroll-down-button {
+        font-size: 0.8rem;
+      }
+      
+      .scroll-down-arrow {
+        width: 25px;
+        height: 25px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .scroll-down-container {
+        bottom: 15px;
+      }
+      
+      .scroll-down-button {
+        font-size: 0.7rem;
+      }
+      
+      .scroll-down-arrow {
+        width: 22px;
+        height: 22px;
+      }
+    }
       
       /* Logo animation */
       @keyframes logo-pulse {
@@ -1083,6 +1167,16 @@
         <a href="#free-games" class="explorebtn" id="exploreGamesBtn">Explore Games</a>
       </div>
     </section>
+
+
+    <div class="scroll-down-container" id="scrollDownContainer">
+      <button class="scroll-down-button" id="scrollDownButton">
+        <span>Scroll Down</span>
+        <div class="scroll-down-arrow"></div>
+      </button>
+    </div>
+
+
 
       <!-- ==================== FREE GAMES SECTION ==================== -->
       <section class="container my-5 animated-bg" id="free-games">
@@ -2310,6 +2404,69 @@
           }
         });
       }
+
+
+
+
+
+
+
+
+
+
+
+
+
+       // Scroll Down Button Functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const scrollDownContainer = document.getElementById('scrollDownContainer');
+      const scrollDownButton = document.getElementById('scrollDownButton');
+      const loadingScreen = document.getElementById('loading-screen');
+      let hasScrolled = false;
+      
+      // Show scroll button after loading screen is hidden
+      const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.target.classList.contains('hidden')) {
+            // Wait a bit before showing the scroll button
+            setTimeout(() => {
+              scrollDownContainer.classList.add('visible');
+            }, 1000);
+            observer.disconnect();
+          }
+        });
+      });
+      
+      // Start observing the loading screen
+      if (loadingScreen) {
+        observer.observe(loadingScreen, { attributes: true });
+      }
+      
+      // Handle scroll down button click
+      if (scrollDownButton) {
+        scrollDownButton.addEventListener('click', function() {
+          const freeGamesSection = document.getElementById('free-games');
+          if (freeGamesSection) {
+            freeGamesSection.scrollIntoView({ behavior: 'smooth' });
+          }
+        });
+      }
+      
+      // Hide scroll button after first scroll
+      window.addEventListener('scroll', function() {
+        if (!hasScrolled && window.scrollY > 100) {
+          hasScrolled = true;
+          scrollDownContainer.classList.remove('visible');
+          
+          // After animation completes, hide completely
+          setTimeout(() => {
+            scrollDownContainer.style.display = 'none';
+          }, 500);
+        }
+      });
+    });
+
+    
     </script>
   </body>
 </html>

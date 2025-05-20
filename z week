@@ -2,12 +2,10 @@ WEEK 3
 
 User side : 
 User profile(Show user details, show address, show orders, edit profile, cancel orders, forgot password).
-Show user details including profile image and address.
+Show user details including address.
 Implement Edit profile (edit profile and profile page should not be the same)
 Note : When editing email need to verify the emails via OTP or Token.
 Implement an option to change password followed by its functionality.
-
- 
 Address Management 
 Implement Add,Edit and Delete.
 Checkout page
@@ -43,6 +41,10 @@ If the verification is accepted ,then return the previously paid amount by the c
 Implement search,sort and filter along with clear search functionality.
 Implement Pagination
 Inventory/Stock management.
+
+
+      
+
 
 
       
