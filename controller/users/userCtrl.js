@@ -419,7 +419,7 @@ const gamesPage = async (req, res) => {
     const companys = await Company.find({ isBlocked: false });
 
     const page = parseInt(req.query.page) || 1;
-    const limit = 9;
+    const limit = 6;
     const skip = (page - 1) * limit;
 
     // Build filter query

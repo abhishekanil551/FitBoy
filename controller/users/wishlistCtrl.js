@@ -6,29 +6,59 @@ const Product = require('../../models/productDb');
 const wishlistPage = async (req, res) => {
   try {
     const userId = req.session.userId;
+    if (!userId) return res.redirect('/login');
+
     const user = await User.findById(userId).lean();
-    const products = await Product.find({ _id: { $in: user.wishlist }, isListed: true })
+    const wishlistIds = user.wishlist.map(id => id.toString());
+
+    // Pagination setup
+    const page = parseInt(req.query.page) || 1;
+    const limit = 6; // Change limit as needed (e.g., 6 items per page)
+    const skip = (page - 1) * limit;
+    const totalWishlistItems = wishlistIds.length;
+    const totalPages = Math.ceil(totalWishlistItems / limit);
+
+    // Slice IDs for current page
+    const paginatedWishlistIds = wishlistIds.slice(skip, skip + limit);
+
+    // Fetch paginated products
+    const products = await Product.find({ _id: { $in: paginatedWishlistIds }, isListed: true })
       .select('_id name poster salesPrice regularPrice isFree')
       .lean();
-    console.log('Products:', products);
+
+    // Maintain correct order (optional)
+    const sortedProducts = paginatedWishlistIds.map(id => products.find(p => p._id.toString() === id)).filter(Boolean);
+
+    // Rebuild query string
+    const query = { ...req.query };
+    delete query.page;
+    const queryString = new URLSearchParams(query).toString();
 
     res.render('wishlist', {
-      userData:user,
+      userData: user,
       user,
-      products,
-      userWishlist: user.wishlist.map(id => id.toString()),
+      products: sortedProducts,
+      userWishlist: wishlistIds,
+      totalPages,
+      currentPage: page,
+      queryString,
       error: null
     });
+
   } catch (error) {
     console.error('Error loading wishlist page:', error);
     res.render('wishlist', {
       user: null,
       products: [],
       userWishlist: [],
+      totalPages: 0,
+      currentPage: 1,
+      queryString: '',
       error: 'Failed to load wishlist. Please try again later.'
     });
   }
 };
+
 
 
 

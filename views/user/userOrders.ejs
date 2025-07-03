@@ -272,7 +272,10 @@
                 </div>
               </div>
               <div class="order-actions">
-                <a href="/orders/invoice/<%= order._id %>" class="btn">Download Invoice</a>
+                <% if (order.status === "paid") { %>
+  <a href="/orders/invoice/<%= order._id %>" class="btn">Download Invoice</a>
+<% } %>
+
                 <button class="btn details-btn" onclick='showOrderDetails(<%- JSON.stringify(order) %>)'>View Details</button>
               </div>
             </div>
@@ -341,5 +344,7 @@
       });
     }
   </script>
+ <%- include('partials/userPagination') %>
+
 </body>
 </html>

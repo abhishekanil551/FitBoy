@@ -14,6 +14,99 @@ const cartPage = async (req, res) => {
         user: null,
         product: [],
         userCart: [],
+        totalPages: 0,
+        currentPage: 1,
+        queryString: '',
+        error: 'User not found.'
+      });
+    }
+
+    // Get paid orders
+    const paidOrders = await Order.find({ userId, status: 'paid' })
+      .populate({
+        path: 'order_items',
+        populate: { path: 'productId', model: 'Product' }
+      });
+
+    // Extract already purchased product IDs
+    const purchasedProductIds = new Set();
+    for (const order of paidOrders) {
+      for (const item of order.order_items) {
+        if (item.productId) {
+          purchasedProductIds.add(item.productId._id.toString());
+        }
+      }
+    }
+
+    // Fetch user's cart
+    const cart = await Cart.findOne({ userId }).populate('items.productId').lean();
+    let allCartProducts = [];
+    let userCart = [];
+
+    if (cart && cart.items.length > 0) {
+      allCartProducts = cart.items
+        .filter(item =>
+          item.productId &&
+          item.productId.isListed &&
+          !purchasedProductIds.has(item.productId._id.toString())
+        )
+        .map(item => ({
+          _id: item.productId._id,
+          name: item.productId.name,
+          poster: item.productId.poster,
+          salesPrice: item.price,
+          regularPrice: item.productId.regularPrice,
+          isFree: item.productId.isFree
+        }));
+
+      userCart = allCartProducts.map(item => item._id.toString());
+    }
+
+    // Pagination logic
+    const page = parseInt(req.query.page) || 1;
+    const limit = 6; // Items per page
+    const totalItems = allCartProducts.length;
+    const totalPages = Math.ceil(totalItems / limit);
+    const skip = (page - 1) * limit;
+
+    const paginatedProducts = allCartProducts.slice(skip, skip + limit);
+
+    // Build query string (for future filters)
+    const query = { ...req.query };
+    delete query.page;
+    const queryString = new URLSearchParams(query).toString();
+
+    res.render('cart', {
+      userData: user,
+      user,
+      product: paginatedProducts,
+      userCart,
+      totalPages,
+      currentPage: page,
+      queryString,
+      error: null
+    });
+
+  } catch (error) {
+    console.error('Error loading cart:', error);
+    res.render('cart', {
+      user: null,
+      product: [],
+      userCart: [],
+      totalPages: 0,
+      currentPage: 1,
+      queryString: '',
+      error: 'Failed to load cart. Please try again later.'
+    });const cartPage = async (req, res) => {
+  try {
+    const userId = req.session.userId;
+    const user = await User.findById(userId).lean();
+
+    if (!user) {
+      return res.render('cart', {
+        user: null,
+        product: [],
+        userCart: [],
         error: 'User not found.'
       });
     }
@@ -77,6 +170,9 @@ const cartPage = async (req, res) => {
       userCart: [],
       error: 'Failed to load cart. Please try again later.'
     });
+  }
+};
+
   }
 };
 

@@ -70,39 +70,51 @@ const settingsPage = async (req, res) => {
 
 
 
-const addressPage=async(req,res)=>{
+const addressPage = async (req, res) => {
   try {
     const userId = req.session.userId;
-    if (!userId) {
-      return res.redirect('/login');
-    }
+    if (!userId) return res.redirect('/login');
 
-    // Fetch user data
     const userData = await User.findById(userId).lean();
-    if (!userData) {
-      return res.redirect('/pageNotFound');
-    }
+    if (!userData) return res.redirect('/pageNotFound');
 
-    // Handle edit address modal data
+    const allAddresses = userData.addresses || [];
+
+    // Pagination logic
+    const page = parseInt(req.query.page) || 1;
+    const limit = 2; // Show 5 addresses per page
+    const totalAddresses = allAddresses.length;
+    const totalPages = Math.ceil(totalAddresses / limit);
+    const skip = (page - 1) * limit;
+
+    const paginatedAddresses = allAddresses.slice(skip, skip + limit);
+
+    // Handle edit modal
     const editAddressId = req.query.editAddressId;
-    let editModalData = null;
+    const editModalData = editAddressId
+      ? allAddresses.find(addr => addr._id.toString() === editAddressId)
+      : null;
 
-    if (editAddressId) {
-      editModalData = userData.addresses.find(addr => addr._id.toString() === editAddressId);
-      console.log('Found editModalData:', editModalData); // Debug
-    }
+    // Preserve filters (in this case none, but let's keep it future-proof)
+    const query = { ...req.query };
+    delete query.page;
+    const queryString = new URLSearchParams(query).toString();
 
-    // Render the settings page with user data, orders, and search query
     res.render('AddressBook', {
-      user: userData,
-      csrfToken: req.csrfToken ? req.csrfToken() : '',
+      user: { ...userData, addresses: paginatedAddresses }, // send only paginated
+      totalAddresses,
+      totalPages,
+      currentPage: page,
+      queryString,
       editModalData,
+      csrfToken: req.csrfToken ? req.csrfToken() : '',
     });
   } catch (error) {
-    console.error('Error loading settings page:', error);
+    console.error('Error loading address page:', error);
     res.redirect('/pageNotFound');
   }
-}
+};
+
 
 const addAddress = async (req, res) => {
   try {
@@ -364,21 +376,27 @@ const confirmEmailChange = async (req, res) => {
 
 
 
-  const OrdersDetailsPage=async(req,res)=>{
+const OrdersDetailsPage = async (req, res) => {
   try {
     const userId = req.session.userId;
     if (!userId) {
       return res.redirect('/login');
     }
 
-    // Fetch user data
     const userData = await User.findById(userId).lean();
     if (!userData) {
       return res.redirect('/pageNotFount');
     }
 
-    // Fetch orders for the user
-    let orders = await Order.find({ userId })
+    // Pagination setup
+    const page = parseInt(req.query.page) || 1;
+    const limit = 5; // or whatever you want
+    const skip = (page - 1) * limit;
+
+    const totalOrders = await Order.countDocuments({ userId });
+    const totalPages = Math.ceil(totalOrders / limit);
+
+    const orders = await Order.find({ userId })
       .populate({
         path: 'order_items',
         populate: {
@@ -386,18 +404,30 @@ const confirmEmailChange = async (req, res) => {
           model: 'Product'
         }
       })
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .lean();
 
-    // Render the settings page with user data, orders, and search query
+    // Build query string for filters (optional)
+    const query = { ...req.query };
+    delete query.page;
+    const queryString = new URLSearchParams(query).toString();
+
     res.render('userOrders', {
       orders,
       user: userData,
       csrfToken: req.csrfToken ? req.csrfToken() : '',
+      totalPages,
+      currentPage: page,
+      queryString,
     });
   } catch (error) {
     console.error('Error loading settings page:', error);
     res.redirect('/pageNotFount');
-  }}
+  }
+};
+
 
 
 
